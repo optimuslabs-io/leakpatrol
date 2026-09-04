@@ -1,0 +1,37 @@
+title: Coder Registry Hijack - Harvester Script Execution (Windows Provisioner)
+id: d3f6a8b0-4c2e-4f7d-8b9a-1e2d3c4b5a6f
+status: experimental
+description: |
+  Detects a Windows-hosted Coder provisioner invoking dlp.sh or dlp-docker.sh --
+  the credential harvester from the tampered registry modules (GHSA-vx42-ghc9-gw65)
+  -- through terraform.exe and a shell (sh/bash from Git for Windows or WSL). The
+  advisory publishes a distinct harvester build for the windows-rdp module, so
+  Windows provisioners are in scope. It does not publish a full list of tampered
+  modules, so do not read this rule as covering the only affected Windows path.
+references:
+  - https://github.com/coder/coder/security/advisories/GHSA-vx42-ghc9-gw65
+  - https://github.com/optimuslabs-io/leakpatrol
+author: Optimus Labs - Civilizations research team
+license: Apache-2.0
+date: 2026-09-03
+tags:
+  - attack.execution
+  - attack.t1059.004
+  - attack.credential-access
+  - attack.t1552
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection_script:
+    CommandLine|contains:
+      - 'dlp.sh'
+      - 'dlp-docker.sh'
+  selection_context:
+    - ParentImage|endswith: '\terraform.exe'
+    - CommandLine|contains: '\.terraform\modules\'
+    - CurrentDirectory|contains: '\.terraform\modules\'
+  condition: selection_script and selection_context
+falsepositives:
+  - An unrelated script that happens to share the name, run from a Terraform module tree
+level: high

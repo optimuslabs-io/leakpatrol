@@ -1,0 +1,63 @@
+# Copyright 2026 Optimus Labs (Civilizations research team). Apache-2.0.
+#
+# Runs exactly what a developer runs locally: `make check`. That target is the
+# contract -- verify-deps (stdlib-only, networking only via the deploy tier),
+# gofmt, vet, race tests, and a cross-compile smoke -- so CI and local dev cannot
+# drift apart.
+#
+# Actions are pinned to commit SHAs, not tags. Tags are mutable; for a tool built
+# around a hijacked delivery path, a hijackable CI action would be the back door
+# the rest of the project refuses to have.
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6.5.0
+        with:
+          go-version-file: go.mod
+          # Zero dependencies means nothing to cache, and no cache to poison.
+          cache: false
+
+      - run: make check
+
+      # The end-to-end gate: a synthetic compromised provisioner must produce
+      # COMPROMISED, and an empty tree must produce CLEAN. Both targets grep their
+      # own report and exit non-zero on the wrong verdict, so a detection
+      # regression fails CI rather than printing a friendly wrong answer.
+      #
+      # Kept as a separate step from `make check` on purpose: the fixture contains
+      # live indicator strings, so if it ever has to be skipped that is visible
+      # here rather than silently folded into the unit-test gate.
+      - name: End-to-end verdicts (COMPROMISED / CLEAN)
+        run: |
+          make demo
+          make demo-clean
+
+      # The exact base image Coder ships: alpine, no python, no libc surprises.
+      # Runs a real scan, not just preflight -- a static binary that starts but
+      # cannot walk a filesystem would pass a preflight-only check. The EDR-hot
+      # demo fixture is deliberately NOT copied in; an empty tree is enough to
+      # prove the binary runs and emits a report.
+      - name: Runs in Coder's base image
+        run: |
+          make build
+          docker run --rm -v "$PWD/dist:/d" alpine:3.24.1 \
+            /d/leakpatrol all --offline --json --color never \
+            --roots /tmp --home /tmp > /tmp/alpine-report.json
+          python3 -c "import json,sys; r=json.load(open('/tmp/alpine-report.json')); \
+            assert r['verdict'] in ('CLEAN','INDETERMINATE'), r['verdict']; \
+            assert any(t['name']=='fs' and t['status']=='ran' for t in r['tiers']), r['tiers']; \
+            print('alpine scan ok:', r['verdict'])"

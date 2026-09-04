@@ -1,0 +1,26 @@
+leakpatrol
+Copyright 2026 Optimus Labs
+
+This product includes software developed by the Civilizations research team
+at Optimus Labs (https://github.com/optimuslabs-io).
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this software except in compliance with the License.
+You may obtain a copy of the License in the LICENSE file in this
+repository, or at:
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+---
+
+The indicators of compromise this tool hunts for, and the SQL queries embedded
+under sql/, are transcribed from Coder's security advisory GHSA-vx42-ghc9-gw65
+(https://github.com/coder/coder/security/advisories/GHSA-vx42-ghc9-gw65).
+The analysis behind the detection logic is the Optimus Labs briefing "When the
+Supply-Chain Attack Has No CVE: Inside the Coder Registry Hijack", by the
+Civilizations research team
+(https://www.optimuslabs.io/research/briefings/coder-registry-infrastructure-hijack).
+
+Optimus Labs is not affiliated with, endorsed by, or acting for Coder Technologies,
+Inc. "Coder" is their trademark and is used here only to identify the product this
+tool inspects.

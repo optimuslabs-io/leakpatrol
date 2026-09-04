@@ -1,0 +1,29 @@
+title: Coder Registry Hijack - DNS Query for Lookalike Exfil Domain
+id: 3f1c2a6e-8b1d-4c1e-9f0a-1c0d2e3f4a5b
+status: experimental
+description: |
+  Detects DNS resolution of coder-infra.com, the lookalike domain registered
+  2026-08-28 that the harvester served from the hijacked registry.coder.com pool
+  exfiltrated credentials to (GHSA-vx42-ghc9-gw65). Any query is suspicious; a
+  query from a Coder provisioner host between 2026-08-31 07:35 and 21:45 UTC, or
+  after, is proof the harvester ran there.
+references:
+  - https://github.com/coder/coder/security/advisories/GHSA-vx42-ghc9-gw65
+  - https://github.com/optimuslabs-io/leakpatrol
+author: Optimus Labs - Civilizations research team
+license: Apache-2.0
+date: 2026-09-03
+tags:
+  - attack.exfiltration
+  - attack.t1567.002
+  - attack.initial-access
+  - attack.t1195.002
+logsource:
+  category: dns_query
+detection:
+  selection:
+    query|endswith: 'coder-infra.com'
+  condition: selection
+falsepositives:
+  - Security teams querying the indicator deliberately
+level: critical

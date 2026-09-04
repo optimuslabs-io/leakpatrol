@@ -1,0 +1,35 @@
+# Build output. `go build` in the root drops a bare binary; `make` uses dist/.
+/dist/
+/leakpatrol
+/leakpatrol.exe
+
+# Demo/test fixtures -- generated, never committed: they carry live indicator
+# strings that can trip corporate EDR.
+/fixture/
+/testdata/out/
+
+# Lab: all generated. tls/ is a throwaway CA and private key, out/ holds the built
+# binary, tampered tarball and JSON reports, mirror/ is a multi-MB Terraform
+# provider cache. The lab SOURCES (compose, nginx, module, scripts) ARE committed.
+/lab/tls/
+/lab/out/
+/lab/mirror/
+
+# Go
+*.test
+*.out
+*.prof
+
+# Editors and OS cruft
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# Coding-agent files. The SHARED ones are committed on purpose: AGENTS.md and
+# CLAUDE.md are the architecture doc, and .claude/settings.json carries the
+# read-deny rules that keep an agent out of the generated secrets above. Only
+# per-person overrides stay out of the repo.
+.claude/settings.local.json
+CLAUDE.local.md

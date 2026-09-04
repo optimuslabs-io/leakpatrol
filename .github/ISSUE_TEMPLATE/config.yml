@@ -1,0 +1,11 @@
+# Security problems must not become public issues. Route them to private
+# vulnerability reporting; everything else (missed detections, false alarms,
+# tool bugs) is a normal issue.
+blank_issues_enabled: true
+contact_links:
+  - name: Report a security vulnerability (private)
+    url: https://github.com/optimuslabs-io/leakpatrol/security/advisories/new
+    about: Egress outside the deploy tier, a host write, file contents in a report, a false CLEAN. Never open these publicly -- see SECURITY.md.
+  - name: The Coder advisory this tool implements
+    url: https://github.com/coder/coder/security/advisories/GHSA-vx42-ghc9-gw65
+    about: GHSA-vx42-ghc9-gw65 -- the indicators, window and SQL leakpatrol hunts with.

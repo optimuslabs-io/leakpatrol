@@ -1,0 +1,26 @@
+# Normalise line endings so a checkout on Windows cannot break the shell scripts
+# (a CRLF shebang line is a "bad interpreter" error) or produce a gofmt diff.
+# leakpatrol ships a windows/amd64 binary and expects Windows contributors.
+*           text=auto eol=lf
+*.go        text eol=lf
+*.sh        text eol=lf
+*.sql       text eol=lf
+*.tf        text eol=lf
+*.yml       text eol=lf
+*.yaml      text eol=lf
+*.yar       text eol=lf
+*.md        text eol=lf
+Makefile    text eol=lf
+go.mod      text eol=lf
+go.sum      text eol=lf
+
+# Generated release artefacts and any recorded demo are binary.
+*.gif       binary
+*.png       binary
+*.tar       binary
+*.gz        binary
+*.exe       binary
+
+# Keep the rule files out of GitHub's language stats and diff-collapse them: they
+# carry literal indicators by design and are not code anyone edits casually.
+rules/**    linguist-detectable=false

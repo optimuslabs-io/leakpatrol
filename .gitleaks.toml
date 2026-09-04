@@ -1,0 +1,27 @@
+# gitleaks configuration. The default rules apply; only the three findings below
+# are allowlisted, each of which is a string this repository MUST contain.
+#
+# Nothing else is exempt. A new finding anywhere is a real problem, and the fix is
+# to remove the string, not to extend this file. The lab admin password is
+# generated at runtime into lab/out/ (git-ignored) for exactly this reason.
+title = "leakpatrol"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Indicators and planted test secrets that must exist in the tree"
+regexes = [
+  # The advisory's literal X-CLI-Token value. It is an indicator of compromise,
+  # not a credential: the harvester sent it on every exfil POST. The lab stand-in
+  # and the demo fixture reproduce it so the logs tier has something to catch.
+  '''your-secret-token''',
+  # Planted by internal/report/leak_test.go, which fails if this value reaches any
+  # output channel. It exists to be searched for.
+  '''leaked-token-xyz''',
+]
+paths = [
+  '''lab/module/dlp\.sh''',
+  '''testdata/make_fixture\.sh''',
+  '''internal/report/leak_test\.go''',
+]

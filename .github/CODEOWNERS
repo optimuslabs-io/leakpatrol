@@ -1,0 +1,11 @@
+# Every change needs a maintainer's review before it can merge, and every merge to
+# main publishes a release. Branch protection must require review from code owners
+# for this file to have any effect. The team must exist in the optimuslabs-io org.
+*                       @optimuslabs-io/leakpatrol-maintainers
+
+# The trust boundary and the release path get a second look no matter what.
+/.github/               @optimuslabs-io/leakpatrol-maintainers
+/internal/detect/deploy/ @optimuslabs-io/leakpatrol-maintainers
+/internal/scan/         @optimuslabs-io/leakpatrol-maintainers
+/install.sh             @optimuslabs-io/leakpatrol-maintainers
+/Makefile               @optimuslabs-io/leakpatrol-maintainers

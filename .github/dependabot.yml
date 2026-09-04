@@ -1,0 +1,14 @@
+# The only dependencies this repository has are the GitHub Actions in the
+# workflows, and those are pinned to commit SHAs. Dependabot keeps the SHAs
+# current and updates the "# vX.Y.Z" comment beside each one, so the pin never
+# rots into "too old to receive security fixes". No gomod ecosystem: go.sum is
+# empty by design (make verify-deps).
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: "ci"
+    labels: ["ci"]

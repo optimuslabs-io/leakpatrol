@@ -1,0 +1,42 @@
+name: Bug report (tool behaviour)
+description: A crash, a wrong exit code, a flag that does not work, output that is malformed. Not a detection question.
+title: "[bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Redact before you paste: no file contents, log lines, tokens, DSNs or internal hostnames.
+        Exit code 1 for an explicit tier that cannot run (no token, no DSN, missing tar) is by design -- see the README's CLI contract.
+  - type: input
+    id: version
+    attributes:
+      label: leakpatrol --version
+    validations:
+      required: true
+  - type: input
+    id: platform
+    attributes:
+      label: OS / arch / how it was run
+      placeholder: "linux/amd64, kubectl exec into the coder-provisioner pod (alpine)"
+    validations:
+      required: true
+  - type: input
+    id: command
+    attributes:
+      label: Exact command
+      placeholder: "leakpatrol all --offline --json"
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: What happened
+      description: stderr progress and the report (or the error), redacted.
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected

@@ -1,0 +1,59 @@
+name: Detection gap (missed indicator or false alarm)
+description: leakpatrol missed something it should have caught, or flagged something it should not have. The most valuable report we get.
+title: "[detection] "
+labels: ["detection"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Redact before you paste.** Never include file contents, log lines, tokens,
+        hostnames you would not publish, or DSNs. Describe the *shape* of the input
+        (file name pattern, log format, which tier) -- that is enough to reproduce.
+        Defang any indicator you quote (`coder-infra[.]com`, `199.91.220[.]205`) and never
+        attach a sample: the hashes are enough, and the payload is live malware.
+        If your report would reveal that a real deployment was compromised, consider
+        the private channel in SECURITY.md instead.
+  - type: dropdown
+    id: kind
+    attributes:
+      label: Kind
+      options:
+        - Missed indicator (should have been found)
+        - False alarm (flagged something benign)
+        - Wrong severity or exposure path
+        - Wrong verdict from correct findings
+    validations:
+      required: true
+  - type: dropdown
+    id: tier
+    attributes:
+      label: Tier
+      options: [deploy, db, fs, image, logs, coder-version, all]
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: leakpatrol --version
+      placeholder: "leakpatrol v0.1.0 (abc1234, 2026-09-03T00:00:00Z) go1.26"
+    validations:
+      required: true
+  - type: textarea
+    id: shape
+    attributes:
+      label: Shape of the input (redacted)
+      description: What kind of file / log / image / deployment, and what the indicator looked like in it. No contents.
+    validations:
+      required: true
+  - type: textarea
+    id: got
+    attributes:
+      label: What leakpatrol reported
+      description: The relevant FINDINGS / COVERAGE / LIMITATIONS lines and the VERDICT, redacted.
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What it should have reported

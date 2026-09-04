@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "deny": [
+      "Read(./lab/tls/**)",
+      "Read(./lab/out/**)",
+      "Read(./lab/mirror/**)",
+      "Read(./dist/**)",
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Read(./**/*.pem)",
+      "Read(./**/*.key)"
+    ]
+  }
+}

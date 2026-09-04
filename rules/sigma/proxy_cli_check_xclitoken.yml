@@ -1,0 +1,30 @@
+title: Coder Registry Hijack - Exfil HTTP Request (/cli/check with X-CLI-Token)
+id: b4d8c6f2-1e7a-4a3c-8f5d-2c9b0a1e3d4f
+status: experimental
+description: |
+  Detects the harvester's exfiltration request: an HTTP POST to /cli/check on
+  www.coder-infra.com carrying the X-CLI-Token header (GHSA-vx42-ghc9-gw65). Either
+  the URI or the header alone is a strong signal; the header name is the most
+  specific because it appears in no legitimate Coder traffic.
+references:
+  - https://github.com/coder/coder/security/advisories/GHSA-vx42-ghc9-gw65
+  - https://github.com/optimuslabs-io/leakpatrol
+author: Optimus Labs - Civilizations research team
+license: Apache-2.0
+date: 2026-09-03
+tags:
+  - attack.exfiltration
+  - attack.t1567.002
+logsource:
+  category: proxy
+detection:
+  selection_host:
+    cs-host|endswith: 'coder-infra.com'
+  selection_uri:
+    cs-uri-stem: '/cli/check'
+  selection_header:
+    RequestHeaders|contains: 'X-CLI-Token'
+  condition: 1 of selection_*
+falsepositives:
+  - Security teams replaying the indicator deliberately
+level: critical

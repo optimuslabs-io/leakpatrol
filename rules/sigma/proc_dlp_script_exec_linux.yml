@@ -1,0 +1,37 @@
+title: Coder Registry Hijack - Harvester Script Execution (Linux)
+id: c2e5f7a9-3b1d-4e6c-9a8f-0d1c2b3a4e5f
+status: experimental
+description: |
+  Detects execution of dlp.sh or dlp-docker.sh, the credential harvester the
+  tampered Coder registry modules invoked through a Terraform external data source
+  (GHSA-vx42-ghc9-gw65). On a provisioner the parent is typically terraform, and
+  the working directory is under a .terraform/modules tree. Filename-only rules are
+  weak on their own; the parent/path selection is what makes this one specific.
+  Note MalwareBazaar's dvr.sh / dlr.spc from the same week are unrelated.
+references:
+  - https://github.com/coder/coder/security/advisories/GHSA-vx42-ghc9-gw65
+  - https://github.com/optimuslabs-io/leakpatrol
+author: Optimus Labs - Civilizations research team
+license: Apache-2.0
+date: 2026-09-03
+tags:
+  - attack.execution
+  - attack.t1059.004
+  - attack.credential-access
+  - attack.t1552
+logsource:
+  category: process_creation
+  product: linux
+detection:
+  selection_script:
+    CommandLine|contains:
+      - 'dlp.sh'
+      - 'dlp-docker.sh'
+  selection_context:
+    - ParentImage|endswith: '/terraform'
+    - CurrentDirectory|contains: '/.terraform/modules/'
+    - CommandLine|contains: '/.terraform/modules/'
+  condition: selection_script and selection_context
+falsepositives:
+  - An unrelated script that happens to share the name, run from a Terraform module tree
+level: high
