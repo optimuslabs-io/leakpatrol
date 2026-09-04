@@ -5,6 +5,11 @@
 # tags, builds, and publishes it. Nobody picks a version number by hand; a commit
 # that fails check never consumes one. Docs-only merges do not release.
 #
+# workflow_dispatch exists for the cases where a push does not fire this workflow
+# (GitHub skips path-filtered runs it cannot diff, such as a rewritten root commit)
+# and for cutting the first release of a fresh repository. It goes through the same
+# `release` environment gate as a push, so a human still approves every publish.
+#
 # Trust properties, in decreasing order of strength:
 #   1. Sigstore provenance (attest-build-provenance): cryptographic proof, in a
 #      public transparency log, that each binary was built by this workflow from
@@ -16,6 +21,7 @@
 name: release
 
 on:
+  workflow_dispatch:
   push:
     branches: [main]
     paths-ignore:
